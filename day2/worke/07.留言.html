@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    #canvas{background: url("11.jpg")no-repeat;background-size: 100%;}
+    input{position: absolute;margin-left: 700px;margin-top: 300px;}
+    </style>
+</head>
+<body>
+    <input id="input" type="text" name="" value="">
+    <canvas id="canvas" width="500" height="600"></canvas>
+    
+</body>
+<script>
+    var canvas = document.getElementById("canvas")
+    var ctx = canvas.getContext("2d");
+    
+    var input = document.getElementById("input");
+
+    var image
+
+
+    var value
+    var x = 1;
+       input.onclick = function(){
+    
+        if(x){
+              ctx.clearRect(0, 0, canvas.width, canvas.height);
+                x=0;
+        
+        } else{
+            value = input.value 
+            ctx.font = 40 +"px Arial";
+            ctx.fillStyle = "#fff";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(value,100,200);
+
+            var image = new Image();
+            image.src = canvas.toDataURL("image/png");
+            window.open(canvas.toDataURL());
+                       
+                x=1;
+            }
+        }
+
+
+        
+
+ 
+</script>
+</html>

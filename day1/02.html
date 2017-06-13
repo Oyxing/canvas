@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+    div {
+        text-align: center;
+        margin: 20px auto;
+    }
+    
+    #canvas {
+        background: url("img/09.jpg")no-repeat;
+        background-size: 100%;
+        border-radius: 50%;
+    }
+</style>
+
+<body>
+    <div>
+        <canvas id="canvas" height="600px" width="600px"></canvas>
+
+    </div>
+</body>
+<script>
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext("2d");
+
+    var image = new Image();
+
+
+    console.log(ctx);
+    var width = ctx.canvas.width;
+    var height = ctx.canvas.height;
+    var r = width / 2;
+    var rem = width / 200;
+    console.log(width, "===", height, "===", r)
+        // 时钟的外圆
+    function drawBckground() {
+        // 保存当前环境的状态。
+        ctx.save();
+        // 定义圆心
+        ctx.translate(r, r);
+        // 起始一条路径，或重置当前路径。
+        ctx.beginPath();
+        // 宽度
+        ctx.lineWidth = 8 * rem;
+        ctx.strokeStyle = "#744F22";
+        // 画圆
+        ctx.arc(0, 0, r - ctx.lineWidth / 2, 0, 2 * Math.PI, false);
+        // 填充线段
+        ctx.stroke();
+        var hourNumbers = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2];
+
+        ctx.font = 18 * rem + "px Aeial";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        hourNumbers.forEach(function(number, i) {
+            var rad = 2 * Math.PI / 12 * i;
+            var x = Math.cos(rad) * (r - 30 * rem);
+            var y = Math.sin(rad) * (r - 30 * rem);
+            ctx.fillText(number, x, y);
+        });
+        for (var i = 0; i < 60; i++) {
+            var rad = 2 * Math.PI / 60 * i;
+            // 利用三角函数找点
+            var x = Math.cos(rad) * (r - 18 * rem);
+            var y = Math.sin(rad) * (r - 18 * rem);
+            ctx.beginPath();
+            if (i % 5 === 0) {
+                ctx.fillStyle = "red"
+                ctx.arc(x, y, 2.5 * rem, 0, 2 * Math.PI, false);
+            } else {
+                ctx.fillStyle = "#ff0"
+                ctx.arc(x, y, 1.5 * rem, 0, 2 * Math.PI, false);
+            }
+            // 填充整体
+            ctx.fill();
+        }
+    }
+    // 时针
+    function drawHour(hour, minute) {
+        ctx.save()
+        ctx.beginPath();
+        var rad = 2 * Math.PI / 12 * hour;
+        var mrad = 2 * Math.PI / 12 / 60 * minute;
+        // 旋转
+        ctx.rotate(rad + mrad);
+        ctx.strokeStyle = "#000";
+        ctx.lineWidth = 6;
+        ctx.lineCap = "round";
+        // 画线段 开头
+        ctx.moveTo(0, 10 * rem);
+        // 尾部
+        ctx.lineTo(0, -r / 2);
+        // 填充
+        ctx.stroke();
+        ctx.restore()
+    }
+    // 分针
+    function drawMinute(minute) {
+        ctx.save()
+        ctx.beginPath();
+        var rad = 2 * Math.PI / 60 * minute;
+        ctx.rotate(rad);
+        ctx.strokeStyle = "#000";
+        ctx.lineWidth = 3;
+        //  线段两端变圆滑
+        ctx.lineCap = "round";
+        ctx.moveTo(0, 10 * rem);
+        ctx.lineTo(0, -r + 30 * rem);
+        ctx.stroke();
+        ctx.restore()
+
+    }
+    // 秒针
+    function drawSecond(second) {
+        ctx.save()
+        ctx.beginPath();
+        var rad = 2 * Math.PI / 60 * second;
+        ctx.rotate(rad);
+        ctx.fillStyle = "red";
+        ctx.moveTo(-2, 20 * rem);
+        ctx.lineTo(2, 20 * rem);
+        ctx.lineTo(1, -r + 18 * rem);
+        ctx.lineTo(-1, -r + 18 * rem);
+        ctx.fill();
+        ctx.restore()
+
+    }
+
+    function drawDot() {
+        ctx.beginPath();
+        ctx.fillStyle = "#fff";
+        ctx.arc(0, 0, 3 * rem, 0, 2 * Math.PI, false);
+        ctx.fill();
+
+    }
+    // 获取当前本地时间
+    function draw() {
+        ctx.clearRect(0, 0, width, height);
+        var now = new Date();
+        var hour = now.getHours();
+        var ninute = now.getMinutes();
+        var second = now.getSeconds();
+        drawBckground();
+        drawHour(hour, ninute)
+        drawMinute(ninute)
+        drawSecond(second);
+        drawDot()
+            // 返回之前保存过的路径状态和属性。
+        ctx.restore()
+
+    }
+
+    draw()
+
+    setInterval(draw, 1000)
+</script>
+
+</html>
